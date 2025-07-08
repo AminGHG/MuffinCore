@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 
 public class DiscordCommand implements CommandExecutor {
 
-    private final String discordLink = "https://discord.gg/u7TZNPxXZJ";
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -28,7 +26,7 @@ public class DiscordCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GRAY + "support the " + ChatColor.of("#00A2F8") + "server");
         player.sendMessage("");
         player.sendMessage(ChatColor.of("#00A2F8") + "" + ChatColor.BOLD + "VISIT TODAY");
-        player.sendMessage(ChatColor.of("#00A2F8") + "" + ChatColor.UNDERLINE + discordLink);
+        player.sendMessage(ChatColor.of("#00A2F8") + "" + ChatColor.UNDERLINE + "https://discord.gg/u7TZNPxXZJ");
 
         // Actionbar message
         player.sendActionBar(ChatColor.GRAY + "Link message was sent in chat!");

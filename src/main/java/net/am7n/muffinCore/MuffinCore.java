@@ -107,7 +107,7 @@ public final class MuffinCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnTotemPopListener(nightVisionCmd), this);
         getLogger().info("OnTotemPopListener loaded.");
 
-        getServer().getPluginManager().registerEvents(new OnRespawnListener(nightVisionCmd), this);
+        getServer().getPluginManager().registerEvents(new OnDeathListener(nightVisionCmd), this);
         getLogger().info("OnRespawnListener loaded.");
 
         // Hide command + listener
