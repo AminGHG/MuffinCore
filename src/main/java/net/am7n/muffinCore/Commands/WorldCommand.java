@@ -11,7 +11,7 @@ public class WorldCommand implements CommandExecutor {
 
         if (player.getWorld().getName().equals("spawn") || player.getWorld().getName().equals("afk")) {
             if (WorldDataUtil.hasWorldLocation(player)) {
-                player.teleport(WorldDataUtil.getWorldLocation(player));
+                player.teleportAsync(WorldDataUtil.getWorldLocation(player));
                 player.sendActionBar("§x§1§5§e§d§4§1Teleported you back into the world!");
                 player.playSound(player.getLocation(), "entity.player.levelup", 1f, 1f);
             } else {
