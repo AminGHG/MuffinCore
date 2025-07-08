@@ -18,12 +18,6 @@ public class NightVisionListener implements Listener {
     }
 
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        command.reapplyIfEnabled(player);
-    }
-
-    @EventHandler
     public void onDrinkMilk(PlayerItemConsumeEvent event) {
         if (event.getItem().getType() == Material.MILK_BUCKET) {
             command.reapplyIfEnabled(event.getPlayer());
