@@ -28,6 +28,9 @@ public final class MuffinCore extends JavaPlugin {
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getLogger().info("Command /spawn registered.");
 
+        getCommand("startchat").setExecutor(new StartChatCommand());
+        getLogger().info("Command /startchat registered.");
+
         getCommand("afk").setExecutor(new AFKCommand(this));
         getLogger().info("Command /afk registered.");
 

@@ -31,3 +31,6 @@ commands:
     description: Teleport to the crates
   world:
     description: Return to your previous location from spawn or afk
+  startchat:
+    description: Starts a fake chat
+    permission: muffinsmp.command.startchat
