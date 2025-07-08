@@ -19,6 +19,6 @@ public class OnTotemPopListener implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
 
         // Reapply night vision if enabled
-        command.reapplyIfEnabled(player);
+        command.reapplyIfEnabledTotem(player);
     }
 }

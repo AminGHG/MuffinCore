@@ -118,6 +118,17 @@ public class NightvisionCommand implements CommandExecutor {
                     null, // onCancel callback
                     20L
             );
+
+        }
+    }
+    public void reapplyIfEnabledTotem(Player player) {
+        if (isNightVisionEnabled(player.getUniqueId())) {
+            player.getScheduler().runDelayed(
+                    Bukkit.getPluginManager().getPlugin("MuffinCore"),
+                    scheduled -> player.addPotionEffect(NIGHT_VISION_EFFECT),
+                    null, // onCancel callback
+                    1L
+            );
         }
     }
 }

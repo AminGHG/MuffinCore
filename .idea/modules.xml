@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/MuffinCore.iml" filepath="$PROJECT_DIR$/.idea/MuffinCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MuffinCore.main.iml" filepath="$PROJECT_DIR$/.idea/modules/MuffinCore.main.iml" />
     </modules>
   </component>
 </project>
