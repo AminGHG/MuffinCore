@@ -12,7 +12,6 @@ public class WorldDataUtil {
     private static final Location AFK_LOC = new Location(Bukkit.getWorld("afk"), 0.5, 50, 0.5);
     private static final Location Crates_LOC = new Location(Bukkit.getWorld("spawn"), 0.5, 97, -64.5, 180, 0);
     private static final HashMap<UUID, Location> playerWorldLocations = new HashMap<>();
-// test
     public static Location getSpawn() {
         return SPAWN_LOC;
     }
