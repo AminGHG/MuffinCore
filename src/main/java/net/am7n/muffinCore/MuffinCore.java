@@ -33,6 +33,7 @@ public final class MuffinCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DamageListener(), this);
 
 
+
         // Initialize SkinsRestorer API
         skinsRestorer = SkinsRestorerProvider.get();
 
