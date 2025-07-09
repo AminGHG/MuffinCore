@@ -2,6 +2,7 @@ package net.am7n.muffinCore;
 
 import net.am7n.muffinCore.Commands.*;
 import net.am7n.muffinCore.Listeners.*;
+import net.am7n.muffinCore.Tasks.RTPTabCompleter;
 import net.skinsrestorer.api.SkinsRestorer;
 import net.skinsrestorer.api.SkinsRestorerProvider;
 import org.bukkit.Bukkit;
@@ -112,6 +113,13 @@ public final class MuffinCore extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new OnDeathListener(nightVisionCmd), this);
         getLogger().info("OnRespawnListener loaded.");
+
+        // RTP command + listener
+        instance = this;
+
+        getCommand("rtp").setExecutor(new RTPCommand());
+        getCommand("rtp").setTabCompleter(new RTPTabCompleter());
+        getServer().getPluginManager().registerEvents(new RTPListener(), this);
 
         // Hide command + listener
         HideCommand hideCmd = new HideCommand(dataFolder, skinsRestorer);

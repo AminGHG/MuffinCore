@@ -34,3 +34,6 @@ commands:
   startchat:
     description: Starts a fake chat
     permission: muffinsmp.command.startchat
+  rtp:
+    description: Randomly teleport to a world
+    aliases: /randomtp, /randomteleport
