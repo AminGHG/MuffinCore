@@ -11,7 +11,7 @@ public class RTPUtils {
 
     /**
      * Starts a random-teleport sequence with a 5s countdown.
-     * Cooldown & command dispatch are handled by TeleportTimer only if the player completes the timer.
+     * The actual console command + cooldown are only executed if the countdown completes.
      *
      * @param player    the player to teleport
      * @param worldName the world key for betterrtp
@@ -31,7 +31,7 @@ public class RTPUtils {
             return;
         }
 
-        // 2) Close GUI and hand off to the countdown timer
+        // 2) Close GUI and start the countdown timer
         player.closeInventory();
         net.am7n.muffinCore.Tasks.TeleportTimer.start(player, worldName, cooldowns);
     }
