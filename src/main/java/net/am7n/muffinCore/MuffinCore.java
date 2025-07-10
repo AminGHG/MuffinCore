@@ -12,20 +12,50 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public final class MuffinCore extends JavaPlugin {
 
     private static MuffinCore instance;
     private SkinsRestorer skinsRestorer;
-
+    private final String allowedIp = "62.72.177.7";
 
     @Override
     public void onEnable() {
         instance = this;
+
+        try {
+            String publicIp = getPublicIp();
+            getLogger().info("Public IP detected: " + publicIp);
+
+            if (!publicIp.trim().equals(allowedIp)) {
+                getLogger().severe("This plugin is not allowed to run on IP: " + publicIp);
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+
+            // Proceed with plugin enable
+            continueEnable();
+
+        } catch (Exception e) {
+            getLogger().severe("Failed to retrieve public IP: " + e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+        }
+    }
+
+    private String getPublicIp() throws Exception {
+        URL url = new URL("https://api.ipify.org");
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            return in.readLine();
+        }
+    }
+
+    private void continueEnable() {
         getLogger().info("MuffinCore enabling...");
 
-        // === Teleport Commands & Listeners ===
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getLogger().info("Command /spawn registered.");
 
@@ -44,15 +74,12 @@ public final class MuffinCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DamageListener(), this);
         getLogger().info("DamageListener loaded.");
 
-        // Initialize SkinsRestorer API
         skinsRestorer = SkinsRestorerProvider.get();
         getLogger().info("SkinsRestorer API initialized.");
 
-        // Start AdCommand loop for all online players
         getLogger().info("Starting ad loops for all online players...");
         startAdLoopForAllPlayers();
 
-        // Schedule ads for players who join later
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onJoin(PlayerJoinEvent event) {
@@ -62,7 +89,6 @@ public final class MuffinCore extends JavaPlugin {
         }, this);
         getLogger().info("Player join listener for ad scheduling registered.");
 
-        // Register existing commands
         this.getCommand("ad").setExecutor(new AdCommand());
         getLogger().info("Command /ad registered.");
 
@@ -75,7 +101,6 @@ public final class MuffinCore extends JavaPlugin {
         this.getCommand("announce").setExecutor(new AnnounceCommand());
         getLogger().info("Command /announce registered.");
 
-        // Register core listeners
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getLogger().info("JoinListener loaded.");
 
@@ -91,7 +116,6 @@ public final class MuffinCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
         getLogger().info("ExplosionListener loaded.");
 
-        // === Custom Data Folder for deaths/messages/etc. ===
         File dataFolder = new File(getDataFolder(), "data");
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
@@ -100,7 +124,6 @@ public final class MuffinCore extends JavaPlugin {
             getLogger().info("Data folder exists at " + dataFolder.getAbsolutePath());
         }
 
-        // Night vision command + listeners
         NightvisionCommand nightVisionCmd = new NightvisionCommand(dataFolder);
         getCommand("nightvision").setExecutor(nightVisionCmd);
         getLogger().info("Command /nightvision registered.");
@@ -114,14 +137,10 @@ public final class MuffinCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnDeathListener(nightVisionCmd), this);
         getLogger().info("OnRespawnListener loaded.");
 
-        // RTP command + listener
-        instance = this;
-
         getCommand("rtp").setExecutor(new RTPCommand());
         getCommand("rtp").setTabCompleter(new RTPTabCompleter());
         getServer().getPluginManager().registerEvents(new RTPListener(), this);
 
-        // Hide command + listener
         HideCommand hideCmd = new HideCommand(dataFolder, skinsRestorer);
         getCommand("hide").setExecutor(hideCmd);
         getLogger().info("Command /hide registered.");
@@ -129,7 +148,6 @@ public final class MuffinCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HideListener(hideCmd), this);
         getLogger().info("HideListener loaded.");
 
-        // Death Toggle Command + Listener
         getServer().getPluginManager().registerEvents(new DeathListener(dataFolder), this);
         getLogger().info("DeathListener loaded.");
 
@@ -140,7 +158,6 @@ public final class MuffinCore extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("MuffinCore disabling...");
-        // Plugin shutdown logic
     }
 
     public static MuffinCore getInstance() {
@@ -151,8 +168,6 @@ public final class MuffinCore extends JavaPlugin {
         return skinsRestorer;
     }
 
-    // ======= Ad Broadcasting Loop (Folia-safe) =======
-
     private void startAdLoopForAllPlayers() {
         getLogger().info("Scheduling ad loops for all online players...");
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -162,8 +177,7 @@ public final class MuffinCore extends JavaPlugin {
     }
 
     private void scheduleAdLoop(Player player) {
-        long delay = 20L * 60 * 20; // 20 minutes in ticks
-        getLogger().info("Scheduling ad loop for player " + player.getName() + " with delay " + delay + " ticks.");
+        long delay = 20L * 60 * 20;
 
         player.getScheduler().runDelayed(this, task -> {
             getLogger().info("Sending first ad title to player " + player.getName());
@@ -172,11 +186,9 @@ public final class MuffinCore extends JavaPlugin {
             player.getScheduler().runDelayed(this, secondTask -> {
                 getLogger().info("Sending second ad title to player " + player.getName());
                 player.sendTitle("§7", "§x§0§0§A§2§F§8§l/discord", 10, 60, 10);
-            }, null, 60L); // 3 seconds later
+            }, null, 60L);
 
-            // Repeat the loop
             scheduleAdLoop(player);
-
         }, null, delay);
     }
 }
