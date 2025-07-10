@@ -1,0 +1,39 @@
+name: MuffinCore
+version: '1.0'
+main: net.am7n.muffinCore.MuffinCore
+api-version: '1.21'
+folia-supported: true
+depend: [ "SkinsRestorer" ]
+commands:
+  discord:
+    description: Shows the Discord link.
+  store:
+    description: Shows the Store link.
+  nightvision:
+    aliases: nv
+    description: Toggles the night vision effect.
+  hide:
+    description: Allows you to hide your name.
+    permission: muffinsmp.command.hide
+  announce:
+    description: Allows you to announce information.
+    permission: muffinsmp.command.AnnounceCommand
+  ad:
+    description: Broadcast an Ad message.
+    permission: muffinsmp.command.AdCommand
+  toggledeathmessage:
+    description: Toggles death messages.
+  spawn:
+    description: Teleport to spawn
+  afk:
+    description: Teleport to AFK area
+  crates:
+    description: Teleport to the crates
+  world:
+    description: Return to your previous location from spawn or afk
+  startchat:
+    description: Starts a fake chat
+    permission: muffinsmp.command.startchat
+  rtp:
+    description: Randomly teleport to a world
+    aliases: /randomtp, /randomteleport

@@ -14,18 +14,15 @@ import java.util.UUID;
 public class TeleportTimer {
 
     /**
-     * Runs a 5-second Folia-safe countdown. If the player stays still, then:
-     *  1) Dispatches the betterrtp console command
-     *  2) Applies the 60s cooldown
-     *  3) Notifies the player & plays the level-up sound
+     * Runs a 5‑second Folia‑safe countdown. If the player moves, cancels
+     * with no cooldown or message. If they stand still, applies their
+     * cooldown and shows the “You were randomly teleported.” message/sound.
      *
-     * If the player moves, cancels with shield-break sound and no cooldown applied.
-     *
-     * @param player    the player to teleport
-     * @param worldName the world key for betterrtp
-     * @param cooldowns shared map of UUID → cooldown-end-timestamp
+     * @param player    the player who initiated the teleport
+     * @param cooldowns shared cooldown map
+     * @param uuid      the player’s UUID (key into that map)
      */
-    public static void start(Player player, String worldName, Map<UUID, Long> cooldowns) {
+    public static void start(Player player, Map<UUID, Long> cooldowns, UUID uuid) {
         var startLoc = player.getLocation().getBlock().getLocation();
         final int[] timer = {5};
 
@@ -33,49 +30,36 @@ public class TeleportTimer {
         scheduler.runAtFixedRate(
                 MuffinCore.getInstance(),
 
-                // This runs every second (20 ticks) after an initial 1-tick delay
                 (ScheduledTask task) -> {
-                    // 1) Cancel if moved
+                    // Cancel on movement
                     if (!player.getLocation().getBlock().getLocation().equals(startLoc)) {
-                        player.sendActionBar(ChatColor.of("#FF0000") + "Teleport cancelled because you moved!");
+                        player.sendMessage(ChatColor.of("#FF0000") + "Teleport cancelled because you moved!");
                         player.playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1f, 1f);
                         task.cancel();
                         return;
                     }
 
-                    // 2) Countdown finished?
+                    // Countdown ended?
                     if (timer[0] <= 0) {
-                        UUID uuid = player.getUniqueId();
-                        long expiry = System.currentTimeMillis() + 60000;
+                        // 1) Apply cooldown immediately
+                        cooldowns.put(uuid, System.currentTimeMillis() + 60000);
 
-                        // Dispatch command & set cooldown together on the main thread
-                        scheduler.run(
-                                MuffinCore.getInstance(),
-                                (ScheduledTask __) -> {
-                                    Bukkit.dispatchCommand(
-                                            Bukkit.getConsoleSender(),
-                                            "betterrtp player " + player.getName() + " " + worldName
-                                    );
-                                    cooldowns.put(uuid, expiry);
-                                }
-                        );
-
-                        // Notify player & play sound
-                        player.sendActionBar(ChatColor.of("#8DFB08") + "You were randomly teleported.");
+                        // 2) Notify player
+                        player.sendMessage(ChatColor.of("#8DFB08") + "You were randomly teleported.");
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
 
                         task.cancel();
                         return;
                     }
 
-                    // 3) Still counting down
+                    // Show action‑bar + sound tick
                     player.sendActionBar(ChatColor.of("#8DFB08") + "Teleporting in " + timer[0] + " seconds...");
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f);
                     timer[0]--;
                 },
 
-                1L,  // initial delay (must be ≥1 tick)
-                20L  // period (20 ticks = 1s)
+                1L,   // initial delay (≥1 tick)
+                20L   // repeat every 20 ticks (1s)
         );
     }
 }

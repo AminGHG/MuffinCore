@@ -70,13 +70,18 @@ public class HideCommand implements CommandExecutor {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(JavaPlugin.getProvidingPlugin(getClass()), () ->
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                                "tab player " + player.getName() + " tagprefix &k"),
+        Bukkit.getGlobalRegionScheduler().runDelayed(
+                JavaPlugin.getProvidingPlugin(getClass()),
+                task -> Bukkit.dispatchCommand(
+                        Bukkit.getConsoleSender(),
+                        "tab player " + player.getName() + " tagprefix &k"
+                ),
                 2L
         );
+
         applySkinAsync(player, "Steve");
     }
+
 
     @Override
     public boolean onCommand(CommandSender sender, Command command,

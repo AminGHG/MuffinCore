@@ -30,9 +30,6 @@ public class OnDeathListener implements Listener {
                 MuffinCore.getInstance(), // plugin instance
                 task -> {
 
-                    player.teleportAsync(spawn);
-
-
                     player.getInventory().addItem(
                             new ItemStack(Material.COOKED_BEEF, 16),
                             new ItemStack(Material.CHAINMAIL_BOOTS),
