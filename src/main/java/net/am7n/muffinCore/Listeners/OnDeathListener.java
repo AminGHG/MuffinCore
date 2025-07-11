@@ -61,33 +61,39 @@ public class OnDeathListener implements Listener {
     public void onFirstJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        // ✅ Only run this block if it's their first time joining
         if (!player.hasPlayedBefore()) {
             Location spawn = WorldDataUtil.getSpawn();
-            player.teleportAsync(spawn);
 
-            // Delay the giving of items by 1 tick using Folia PlayerScheduler
-            player.getScheduler().runDelayed(
-                    MuffinCore.getInstance(), // plugin instance
+            player.getScheduler().run(
+                    MuffinCore.getInstance(),
                     task -> {
-                        player.getInventory().addItem(
-                                new ItemStack(Material.COOKED_BEEF, 16),
-                                new ItemStack(Material.CHAINMAIL_BOOTS),
-                                new ItemStack(Material.CHAINMAIL_LEGGINGS),
-                                new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                                new ItemStack(Material.CHAINMAIL_HELMET),
-                                new ItemStack(Material.IRON_SWORD),
-                                new ItemStack(Material.IRON_SHOVEL),
-                                new ItemStack(Material.IRON_AXE)
-                        );
-                        command.reapplyIfEnabled(player);
+                        player.teleportAsync(spawn).thenRun(() -> {
+                            player.getScheduler().runDelayed(
+                                    MuffinCore.getInstance(),
+                                    delayedTask -> {
+                                        player.getInventory().addItem(
+                                                new ItemStack(Material.COOKED_BEEF, 16),
+                                                new ItemStack(Material.CHAINMAIL_BOOTS),
+                                                new ItemStack(Material.CHAINMAIL_LEGGINGS),
+                                                new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+                                                new ItemStack(Material.CHAINMAIL_HELMET),
+                                                new ItemStack(Material.IRON_SWORD),
+                                                new ItemStack(Material.IRON_SHOVEL),
+                                                new ItemStack(Material.IRON_AXE)
+                                        );
 
-                        World spawnWorld = Bukkit.getWorld("spawn");
-                        Location spawnLoc = new Location(spawnWorld, 0, 97, 0, 180f, 0f);
-                        player.teleportAsync(spawnLoc);
+                                        command.reapplyIfEnabled(player);
+
+                                        World spawnWorld = Bukkit.getWorld("spawn");
+                                        Location spawnLoc = new Location(spawnWorld, 0, 97, 0, 180f, 0f);
+                                        player.teleportAsync(spawnLoc);
+                                    },
+                                    null,
+                                    5L
+                            );
+                        });
                     },
-                    null, // executor, null means global executor
-                    5L    // delay in ticks
+                    null
             );
         }
     }
