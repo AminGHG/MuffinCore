@@ -2,6 +2,8 @@ package net.am7n.muffinCore;
 
 import net.am7n.muffinCore.Commands.*;
 import net.am7n.muffinCore.Listeners.*;
+import net.am7n.muffinCore.Service.FoliaStatisticsService;
+import net.am7n.muffinCore.Service.StatisticsService;
 import net.am7n.muffinCore.Tasks.RTPTabCompleter;
 import net.skinsrestorer.api.SkinsRestorer;
 import net.skinsrestorer.api.SkinsRestorerProvider;
@@ -22,6 +24,7 @@ public final class MuffinCore extends JavaPlugin {
     private static MuffinCore instance;
     private SkinsRestorer skinsRestorer;
     private final String allowedIp = "62.72.177.7";
+    private StatisticsService statisticsService;
 
     @Override
     public void onEnable() {
@@ -54,6 +57,28 @@ public final class MuffinCore extends JavaPlugin {
     }
 
     private void continueEnable() {
+        File statsFile = new File(getDataFolder(), "data/statistics.yml");
+        if (!statsFile.getParentFile().exists()) {
+            statsFile.getParentFile().mkdirs();
+            getLogger().info("Created folder for statistics data at " + statsFile.getParent());
+        }
+        try {
+            if (!statsFile.exists()) {
+                statsFile.createNewFile();
+                getLogger().info("Created statistics.yml");
+            }
+        } catch (Exception e) {
+            getLogger().severe("Could not create statistics.yml: " + e.getMessage());
+        }
+
+        this.statisticsService = new FoliaStatisticsService(this);
+        getLogger().info("Initialized FoliaStatisticsService");
+
+        getCommand("statistics").setExecutor(new StatisticsCommand(statisticsService));
+        getLogger().info("Registered /statistics command");
+
+
+
         getLogger().info("MuffinCore enabling...");
 
         getCommand("spawn").setExecutor(new SpawnCommand(this));
