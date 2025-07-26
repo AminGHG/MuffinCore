@@ -26,7 +26,7 @@ public class DiscordCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GRAY + "support the " + ChatColor.of("#00A2F8") + "server");
         player.sendMessage("");
         player.sendMessage(ChatColor.of("#00A2F8") + "" + ChatColor.BOLD + "VISIT TODAY");
-        player.sendMessage(ChatColor.of("#00A2F8") + "" + ChatColor.UNDERLINE + "https://discord.gg/u7TZNPxXZJ");
+        player.sendMessage(ChatColor.of("#00A2F8") + "" + ChatColor.UNDERLINE + "https://discord.gg/muffinsmp");
 
         // Actionbar message
         player.sendActionBar(ChatColor.GRAY + "Link message was sent in chat!");

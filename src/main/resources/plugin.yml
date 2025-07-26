@@ -3,7 +3,7 @@ version: '1.0'
 main: net.am7n.muffinCore.MuffinCore
 api-version: '1.21'
 folia-supported: true
-depend: [ "SkinsRestorer" ]
+depend: [SkinsRestorer, PlaceholderAPI, Vault]
 commands:
   discord:
     description: Shows the Discord link.
@@ -36,4 +36,16 @@ commands:
     permission: muffinsmp.command.startchat
   rtp:
     description: Randomly teleport to a world
-    aliases: /randomtp, /randomteleport
+    aliases: randomtp, randomteleport
+  statistics:
+    descriptions: Allows you to view statistics
+    aliases: stats
+  leaderboards:
+     description: Shows a message
+     aliases: leaderboard
+  bounty:
+    description: Shows a message
+    aliases: bounties
+  duels:
+    description: Shows a message
+    aliases: duel
