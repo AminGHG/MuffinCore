@@ -1,4 +1,4 @@
-MuffinSMP Core Plugin - 50% made with ChatGPT ;)
+MuffinSMP Core Plugin - 98.4% made with ChatGPT ;)
 
 Use it at your own risk
 
